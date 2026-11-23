@@ -4,7 +4,6 @@ A Claude Code mod that draws PNG figures inline in the terminal, with numbered c
 
 - When a reply holds `![Figure 3. What the figure shows.](/absolute/path.png)` on its own line, the mod draws the picture there, with **Figure 3.** *What the figure shows.* under it.
 - When Claude reads a PNG with the Read tool, the picture draws under the Read row, captioned with the file name.
-- The mod adds a short section to the system prompt, so Claude numbers figures through the session, writes real captions, and refers to them in the text ("see Figure 3").
 
 ## Install
 
@@ -15,6 +14,14 @@ At the prompt of a Claude Code session in a terminal:
 ```
 
 Answer `y` to add the marketplace, then pick a scope.
+
+## Tell Claude to use figures
+
+`FIGURES.md` holds the instructions: when to draw a figure, how to number it through the session, how to caption it, and how to refer to it in the text ("see Figure 3"). Save it next to your `~/.claude/CLAUDE.md` and add this line to that file:
+
+```
+@FIGURES.md
+```
 
 ## Terminals
 
