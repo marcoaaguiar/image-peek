@@ -2,6 +2,8 @@
 
 A Claude Code mod that draws PNG figures inline in the terminal, with numbered captions, the way a paper does.
 
+![A Claude Code reply with two figures, each drawn inline with a numbered caption, and text that refers to Figure 1 and Figure 2](docs/demo.png)
+
 - When a reply holds `![Figure 3. What the figure shows.](/absolute/path.png)` on its own line, the mod draws the picture there, with **Figure 3.** *What the figure shows.* under it.
 - When Claude reads a PNG with the Read tool, the picture draws under the Read row, captioned with the file name.
 
