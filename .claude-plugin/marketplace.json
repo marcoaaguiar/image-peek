@@ -1,0 +1,5 @@
+{
+  "name": "image-peek",
+  "owner": { "name": "Marco Aguiar" },
+  "plugins": [{ "name": "image-peek", "source": "./" }]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "image-peek",
+  "version": "0.3.0",
+  "description": "Draw PNG figures inline in Claude Code replies, with numbered captions",
+  "author": { "name": "Marco Aguiar" },
+  "license": "MIT",
+  "repository": "https://github.com/marcoaaguiar/image-peek"
+}
