@@ -24,6 +24,18 @@ const isPng = (output: unknown): output is ImageRead => {
   return read?.type === 'image' && read.file?.type === 'image/png'
 }
 
+const fileUrl = (path: string): string => `file://${encodeURI(path)}`
+
+const escaped = (text: string): string => text.replace(/([\\[\]*_`])/g, '\\$1')
+
+const openFile = async ($: EngineInterface, path: string): Promise<void> => {
+  try {
+    await $.process.run(['open', path])
+  } catch {
+    await $.process.run(['xdg-open', path]).catch(() => undefined)
+  }
+}
+
 const pathOf = (input: unknown): string => String((input as { file_path?: string } | undefined)?.file_path ?? '')
 
 const readsPng = (call: { tool: string; input: unknown }): boolean => call.tool === 'Read' && /\.png$/i.test(pathOf(call.input))
@@ -69,18 +81,22 @@ export const register: Register = on => {
     if (call.tool !== 'Read' || call.isRunning || call.isErrored || !isPng(call.output)) return row
     const ui = $.ui.resolve(e)
     if (!('Image' in ui)) return row
-    const { Box, Image, Text } = ui
+    const { Box, Image, Markdown } = ui
     const { base64, dimensions } = call.output.file
     const size = cells(dimensions?.displayWidth ?? 2, dimensions?.displayHeight ?? 1)
-    const name = pathOf(call.input).split('/').pop() ?? ''
+    const path = pathOf(call.input)
+    const name = path.split('/').pop() ?? ''
     return (
       <Box flexDirection="column">
         {row}
         <Box flexDirection="column" paddingLeft={2} width={size.columns + 2}>
           <Image source={{ png: padded(base64) }} {...size} alt={name} />
-          <Box justifyContent="center">
-            <Text dimColor italic>{name}</Text>
-          </Box>
+          <Markdown
+            key={`read-${call.tool_use_id}`}
+            dimColor
+            text={`[*${escaped(name)}*](${fileUrl(path)})`}
+            onLinkPress={() => void openFile($, path)}
+          />
         </Box>
       </Box>
     )
@@ -94,6 +110,7 @@ export const register: Register = on => {
     const figures = await Promise.all(
       links.map(async (match, i) => ({
         caption: match[1] ?? '',
+        path: match[2] ?? '',
         png: await load($, match[2] ?? ''),
         after: text.slice((match.index ?? 0) + match[0].length, links[i + 1]?.index ?? text.length).trim(),
       })),
@@ -115,10 +132,12 @@ export const register: Register = on => {
                   <Box justifyContent="center">
                     <Image source={{ png: figure.png.base64 }} {...size} alt={figure.caption || ' '} />
                   </Box>
-                  <Text dimColor>
-                    {label && <Text bold>Figure {label[1]}. </Text>}
-                    <Text italic>{caption}</Text>
-                  </Text>
+                  <Markdown
+                    key={`figure-${figure.path}`}
+                    dimColor
+                    text={`[${label ? `**Figure ${label[1]}.** ` : ''}*${escaped(caption)}*](${fileUrl(figure.path)})`}
+                    onLinkPress={() => void openFile($, figure.path)}
+                  />
                 </Box>
               ) : (
                 <Text dimColor>[figure not found: {figure.caption}]</Text>
