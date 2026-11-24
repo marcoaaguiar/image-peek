@@ -25,6 +25,13 @@ Answer `y` to add the marketplace, then pick a scope.
 @FIGURES.md
 ```
 
+## Open a figure
+
+Click a caption to open the image at full size in your default viewer (Preview on macOS).
+
+- A plain click works when Claude Code runs in fullscreen mode (`"tui": "fullscreen"` in `~/.claude/settings.json`).
+- Cmd-click (Ctrl-click on Linux) works in every mode: the caption is also a link to the file. The terminal must support links (Ghostty, iTerm2, kitty and WezTerm do). Inside tmux, turn on the `hyperlinks` terminal feature, for example `set -as terminal-features ",xterm-ghostty:hyperlinks"`.
+
 ## Terminals
 
 Pictures draw in Ghostty, kitty 0.28 or later, and iTerm2 3.5 or later. Elsewhere the caption shows as text.
